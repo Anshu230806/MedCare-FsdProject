@@ -1,14 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sign Up — MedRemind+</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
 </head>
 
 <body>
-
+    <div class="auth-page">
+        <div class="auth-box">
+            <div class="brand">MedRemind<span>+</span></div>
+            <h1 style="margin-top:18px">Create account</h1>
+            <p class="muted">Set up a patient or caregiver account.</p>
+            <form id="signupForm">
+                <div class="field"><label>Full name</label><input id="name" required></div>
+                <div class="field"><label>Email</label><input id="email" type="email" required></div>
+                <div class="field"><label>Password</label><input id="password" type="password" minlength="6" required>
+                </div>
+                <div class="field"><label>Confirm password</label><input id="confirm" type="password" required></div>
+                <div class="field"><label>Role</label><select id="role">
+                        <option value="patient">Patient</option>
+                        <option value="caregiver">Caregiver</option>
+                    </select></div><button class="btn btn-primary" style="width:100%;margin-top:16px">Create
+                    Account</button>
+            </form>
+            <div class="auth-links"><a href="login.html">Back to login</a></div>
+        </div>
+    </div>
 </body>
 
 </html>

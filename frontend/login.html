@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Login — MedRemind+</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+</head>
+
+<body>
+    <div class="auth-page">
+        <div class="auth-box">
+            <div class="brand">MedRemind<span>+</span></div>
+            <h1 style="margin-top:18px">Welcome back</h1>
+            <p class="muted">Log in to continue.</p>
+            <form id="loginForm">
+                <div class="field"><label>Email</label><input id="email" type="email" required></div>
+                <div class="field"><label>Password</label><input id="password" type="password" required></div><button
+                    class="btn btn-primary" style="width:100%;margin-top:16px">Login</button>
+            </form>
+            <div class="auth-links"><a href="forgot-password.html">Forgot password?</a><a href="signup.html">Create
+                    account</a></div>
+            <div class="demo-box"><strong>Demo accounts</strong><br>Patient: rahul@example.com / 123456<br>Caregiver:
+                priya@example.com / 123456<br>
+                <div class="btn-row" style="margin-top:8px"><button class="btn btn-small" data-demo="patient">Demo
+                        Patient</button><button class="btn btn-small" data-demo="caregiver">Demo Caregiver</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

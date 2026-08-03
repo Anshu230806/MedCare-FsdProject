@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Patient Dashboard — MedRemind+</title><link rel="stylesheet" href="../css/style.css"><script src="../js/storage.js"></script><script src="../js/app.js"></script><script src="../js/patient.js"></script><script src="../js/reminders.js"></script><script src="../js/notifications.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const u=patientInit(); if(!u)return;
+ document.querySelector("[data-name]").textContent=u.name;
+ document.getElementById("dateText").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ function render(){
+   renderPatientSummary(u.id);
+   const rows=patientTodayRows(u.id);
+   const list=document.getElementById("todayList");
+   list.innerHTML=rows.map(({m,log})=>`<div class="med-item"><img class="med-thumb" src="${m.image}" alt=""><div class="med-info"><strong>${m.name}</strong><div class="med-meta">${m.dosage} · ${formatTime(m.time)} · ${m.instructions}</div></div>${statusLabel(log.status)}<button class="btn btn-small" data-action="${log.status==='pending'||log.status==='snoozed'?'take':'details'}" data-id="${m.id}">${log.status==='pending'||log.status==='snoozed'?'Take':'Details'}</button></div>`).join("");
+   list.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>b.dataset.action==="take"?openReminder(b.dataset.id):location.href="medicine-details.html?id="+b.dataset.id);
+   const next=rows.find(r=>["pending","snoozed"].includes(r.log.status));
+   document.getElementById("nextMedicine").innerHTML=next?`<div class="med-item" style="border:0;padding:0"><img class="med-thumb" src="${next.m.image}" alt=""><div class="med-info"><strong>${next.m.name}</strong><div class="med-meta">${next.m.dosage} · ${formatTime(next.m.time)}</div></div><button class="btn btn-primary btn-small" onclick="openReminder('${next.m.id}')">Open Reminder</button></div>`:`<p class="muted">No pending medicines right now.</p>`;
+   const logs=getLogsForPatient(u.id).slice(-5).reverse();
+   document.getElementById("recentActivity").innerHTML=logs.map(l=>{const m=Store.get("medicines",[]).find(x=>x.id===l.medicineId);return `<div class="timeline-item"><div class="timeline-time">${formatDate(l.date)} · ${formatTime(l.actualTime||l.scheduledTime)}</div><strong>${m?.name||"Medicine"}</strong><div class="muted">${statusLabel(l.status)}</div></div>`}).join("")||"<p class='muted'>No activity yet.</p>";
+ }
+ document.getElementById("testReminder").onclick=()=>{const r=patientTodayRows(u.id).find(x=>x.log.status==="pending"||x.log.status==="snoozed"); if(r)openReminder(r.m.id);else toast("No pending medicine to test.");};
+ document.addEventListener("medicationUpdated",render); render(); startReminderWatcher();
+});
+</script>
+</head><body>
+<header class="topbar"><div class="btn-row"><button class="icon-btn mobile-menu">☰</button><a class="brand" href="../patient/dashboard.html">MedRemind<span>+</span></a></div><div class="top-actions"><span class="muted" data-user-name></span><button class="btn btn-small" onclick="logout()">Logout</button></div></header>
+<div class="layout"><aside class="sidebar">
+    <div class="nav-title">Patient</div>
+    <nav class="nav">
+      <a href="../patient/dashboard.html">Dashboard</a>
+      <a href="../patient/medicines.html">My Medicines</a>
+      <a href="../patient/history.html">Medication History</a>
+      <a href="../patient/adherence.html">Adherence</a>
+      <a href="../patient/notifications.html">Notifications</a>
+      <a href="../patient/profile.html">Profile & Settings</a>
+    </nav></aside><main class="main">
+<div class="page-head"><div><h1>Good morning, <span data-name></span></h1><div class="muted" id="dateText"></div></div><button class="btn btn-primary" id="testReminder">Test Reminder</button></div>
+<div class="grid grid-4">
+<div class="card"><div class="muted">Adherence</div><div class="stat" data-stat="adherence">0%</div></div>
+<div class="card"><div class="muted">Taken today</div><div class="stat" data-stat="taken">0</div></div>
+<div class="card"><div class="muted">Pending</div><div class="stat" data-stat="pending">0</div></div>
+<div class="card"><div class="muted">Missed</div><div class="stat" data-stat="missed">0</div></div>
+</div>
+<div class="grid grid-2" style="margin-top:16px">
+<div class="card"><h3>Today's progress</h3><div class="progress"><div data-progress style="width:0%"></div></div><p class="muted" style="margin-top:10px">Based on today's recorded medication events.</p></div>
+<div class="card"><h3>Next medicine</h3><div id="nextMedicine"></div></div>
+</div>
+<div class="card" style="margin-top:16px"><div class="page-head" style="margin-bottom:10px"><h3>Today's medicines</h3><a class="btn btn-small" href="medicines.html">Manage medicines</a></div><div id="todayList" class="med-list"></div></div>
+<div class="card" style="margin-top:16px"><h3>Recent activity</h3><div id="recentActivity" class="timeline"></div></div>
+</main></div>
+<script>document.addEventListener("DOMContentLoaded",()=>{const u=currentUser();document.querySelectorAll("[data-user-name]").forEach(e=>e.textContent=u?.name||"");});</script>
+</body></html>

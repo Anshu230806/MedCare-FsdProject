@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Medicines — MedRemind+</title><link rel="stylesheet" href="../css/style.css"><script src="../js/storage.js"></script><script src="../js/app.js"></script><script src="../js/patient.js"></script><script src="../js/reminders.js"></script><script src="../js/notifications.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const u=patientInit(); if(!u)return;
+ const search=document.getElementById("search"), filter=document.getElementById("filter");
+ function render(){
+   const q=search.value.toLowerCase(), meds=getMedicinesForPatient(u.id).filter(m=>m.name.toLowerCase().includes(q));
+   document.getElementById("medList").innerHTML=meds.length?meds.map(m=>`<div class="med-item"><img class="med-thumb" src="${m.image}" alt=""><div class="med-info"><strong>${m.name}</strong><div class="med-meta">${m.dosage} · ${m.scheduleType==="interval"?`Every ${m.interval.value} ${m.interval.unit}`:formatTime(m.time)}</div><div class="med-meta">${m.instructions||""}</div></div><div class="btn-row"><a class="btn btn-small" href="medicine-details.html?id=${m.id}">Details</a><a class="btn btn-small" href="medicine-form.html?id=${m.id}">Edit</a><button class="btn btn-small btn-danger" data-delete="${m.id}">Delete</button></div></div>`).join(""):`<div class="card"><p class="muted">No medicines found.</p></div>`;
+   document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>{if(confirm("Delete this medicine?")){let all=Store.get("medicines",[]);all=all.filter(m=>m.id!==b.dataset.delete);Store.set("medicines",all);toast("Medicine deleted.");render();}});
+ }
+ search.oninput=render; filter.onchange=render; render();
+});
+</script>
+</head><body>
+<header class="topbar"><div class="btn-row"><button class="icon-btn mobile-menu">☰</button><a class="brand" href="../patient/dashboard.html">MedRemind<span>+</span></a></div><div class="top-actions"><span class="muted" data-user-name></span><button class="btn btn-small" onclick="logout()">Logout</button></div></header>
+<div class="layout"><aside class="sidebar">
+    <div class="nav-title">Patient</div>
+    <nav class="nav">
+      <a href="../patient/dashboard.html">Dashboard</a>
+      <a href="../patient/medicines.html">My Medicines</a>
+      <a href="../patient/history.html">Medication History</a>
+      <a href="../patient/adherence.html">Adherence</a>
+      <a href="../patient/notifications.html">Notifications</a>
+      <a href="../patient/profile.html">Profile & Settings</a>
+    </nav></aside><main class="main">
+<div class="page-head"><div><h1>My Medicines</h1><div class="muted">Manage your active medicine schedules.</div></div><a class="btn btn-primary" href="medicine-form.html">+ Add Medicine</a></div>
+<div class="search-row"><input id="search" placeholder="Search medicine name..."><select id="filter"><option value="all">All</option><option value="active">Active</option></select></div>
+<div id="medList" class="med-list"></div>
+</main></div>
+<script>document.addEventListener("DOMContentLoaded",()=>{const u=currentUser();document.querySelectorAll("[data-user-name]").forEach(e=>e.textContent=u?.name||"");});</script>
+</body></html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Caregiver Profile — MedRemind+</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/storage.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/caregiver.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => { const u = caregiverInit(); if (!u) return; const users = Store.get("users", []), me = users.find(x => x.id === u.id); name.value = me.name; email.value = me.email; const settings = Store.get("settings", {})[u.id] || { missedAlerts: true }; missed.value = String(settings.missedAlerts); save.onclick = () => { me.name = name.value.trim() || me.name; Store.set("users", users); Store.set("currentUser", { ...u, name: me.name }); toast("Profile saved."); }; saveSettings.onclick = () => { const all = Store.get("settings", {}); all[u.id] = { missedAlerts: missed.value === "true", dailySummary: true }; Store.set("settings", all); toast("Settings saved."); }; });
+    </script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="btn-row"><button class="icon-btn mobile-menu">☰</button><a class="brand"
+                href="../caregiver/dashboard.html">MedRemind<span>+</span></a></div>
+        <div class="top-actions"><span class="muted" data-user-name></span><button class="btn btn-small"
+                onclick="logout()">Logout</button></div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="nav-title">Caregiver</div>
+            <nav class="nav">
+                <a href="../caregiver/dashboard.html">Dashboard</a>
+                <a href="../caregiver/patients.html">Patients</a>
+                <a href="../caregiver/alerts.html">Alerts</a>
+                <a href="../caregiver/notifications.html">Notifications</a>
+                <a href="../caregiver/reports.html">Reports</a>
+                <a href="../caregiver/profile.html">Profile</a>
+            </nav>
+        </aside>
+        <main class="main">
+            <div class="page-head">
+                <div>
+                    <h1>Profile</h1>
+                    <div class="muted">Caregiver account and alert settings.</div>
+                </div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>Profile</h3>
+                    <div class="field"><label>Name</label><input id="name"></div>
+                    <div class="field" style="margin-top:12px"><label>Email</label><input id="email" disabled></div>
+                    <button class="btn btn-primary" id="save" style="margin-top:15px">Save Profile</button>
+                </div>
+                <div class="card">
+                    <h3>Alert Settings</h3>
+                    <div class="field"><label>Missed-dose alerts</label><select id="missed">
+                            <option value="true">On</option>
+                            <option value="false">Off</option>
+                        </select></div><button class="btn btn-primary" id="saveSettings" style="margin-top:15px">Save
+                        Settings</button>
+                </div>
+            </div>
+            <div class="card" style="margin-top:16px">
+                <h3>Prototype tools</h3><button class="btn" onclick="resetDemo()">Reset Demo Data</button>
+            </div>
+        </main>
+    </div>
+    <script>document.addEventListener("DOMContentLoaded", () => { const u = currentUser(); document.querySelectorAll("[data-user-name]").forEach(e => e.textContent = u?.name || ""); });</script>
+</body>
+
+</html>

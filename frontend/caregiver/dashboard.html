@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Caregiver Dashboard — MedRemind+</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/storage.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/caregiver.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => { const u = caregiverInit(); if (!u) return; function render() { const p = patientForCaregiver(u.id); if (!p) { patientCard.innerHTML = "<div class='card'><p class='muted'>No connected patients.</p></div>"; return; } const logs = getTodayLogs(p.id); adh.textContent = adherenceFor(p.id) + "%"; taken.textContent = logs.filter(l => l.status === "taken").length; pending.textContent = logs.filter(l => l.status === "pending").length; missed.textContent = logs.filter(l => l.status === "missed").length; patientCard.innerHTML = `<div class="card"><div class="page-head" style="margin-bottom:0"><div><h3>${p.name}</h3><div class="muted">Connected patient</div></div><a class="btn btn-primary" href="patient-details.html?id=${p.id}">View Patient</a></div></div>`; const all = getLogsForPatient(p.id).slice(-6).reverse(); activity.innerHTML = all.map(l => { const m = Store.get("medicines", []).find(x => x.id === l.medicineId); return `<div class="timeline-item"><div class="timeline-time">${formatDate(l.date)} · ${formatTime(l.actualTime || l.scheduledTime)}</div><strong>${m?.name || "Medicine"}</strong><div>${statusLabel(l.status)}</div></div>` }).join(""); } render(); window.addEventListener("storage", render); });
+    </script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="btn-row"><button class="icon-btn mobile-menu">☰</button><a class="brand"
+                href="../caregiver/dashboard.html">MedRemind<span>+</span></a></div>
+        <div class="top-actions"><span class="muted" data-user-name></span><button class="btn btn-small"
+                onclick="logout()">Logout</button></div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="nav-title">Caregiver</div>
+            <nav class="nav">
+                <a href="../caregiver/dashboard.html">Dashboard</a>
+                <a href="../caregiver/patients.html">Patients</a>
+                <a href="../caregiver/alerts.html">Alerts</a>
+                <a href="../caregiver/notifications.html">Notifications</a>
+                <a href="../caregiver/reports.html">Reports</a>
+                <a href="../caregiver/profile.html">Profile</a>
+            </nav>
+        </aside>
+        <main class="main">
+            <div class="page-head">
+                <div>
+                    <h1>Caregiver Dashboard</h1>
+                    <div class="muted">Medication activity for connected patients.</div>
+                </div>
+            </div>
+            <div id="patientCard"></div>
+            <div class="grid grid-4" style="margin-top:16px">
+                <div class="card">
+                    <div class="muted">Adherence</div>
+                    <div class="stat" id="adh">0%</div>
+                </div>
+                <div class="card">
+                    <div class="muted">Taken today</div>
+                    <div class="stat" id="taken">0</div>
+                </div>
+                <div class="card">
+                    <div class="muted">Pending</div>
+                    <div class="stat" id="pending">0</div>
+                </div>
+                <div class="card">
+                    <div class="muted">Missed</div>
+                    <div class="stat" id="missed">0</div>
+                </div>
+            </div>
+            <div class="card" style="margin-top:16px">
+                <h3>Recent patient activity</h3>
+                <div id="activity" class="timeline"></div>
+            </div>
+        </main>
+    </div>
+    <script>document.addEventListener("DOMContentLoaded", () => { const u = currentUser(); document.querySelectorAll("[data-user-name]").forEach(e => e.textContent = u?.name || ""); });</script>
+</body>
+
+</html>

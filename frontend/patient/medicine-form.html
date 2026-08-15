@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Medicine Form — MedRemind+</title><link rel="stylesheet" href="../css/style.css"><script src="../js/storage.js"></script><script src="../js/app.js"></script><script src="../js/patient.js"></script><script src="../js/reminders.js"></script><script src="../js/notifications.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const u=patientInit(); if(!u)return;
+ const form=document.getElementById("medicineForm"), params=new URLSearchParams(location.search), id=params.get("id");
+ const med=id?Store.get("medicines",[]).find(m=>m.id===id):null;
+ const toggle=()=>document.querySelectorAll(".interval-only").forEach(x=>x.style.display=document.getElementById("scheduleType").value==="interval"?"flex":"none");
+ document.getElementById("scheduleType").onchange=toggle; toggle();
+ if(med){
+   document.getElementById("formTitle").textContent="Edit Medicine";
+   ["id","name","dosage","instructions","time","startDate","endDate"].forEach(k=>{if(document.getElementById(k))document.getElementById(k).value=med[k]||""});
+   document.getElementById("scheduleType").value=med.scheduleType;
+   if(med.interval){document.getElementById("intervalValue").value=med.interval.value;document.getElementById("intervalUnit").value=med.interval.unit;}
+   form.dataset.image=med.image||"";
+   if(med.image){const p=document.getElementById("preview");p.src=med.image;p.style.display="block";}
+   toggle();
+ }
+ document.getElementById("imageFile").onchange=e=>{
+   const file=e.target.files[0]; if(!file)return;
+   const reader=new FileReader(); reader.onload=()=>{form.dataset.image=reader.result;const p=document.getElementById("preview");p.src=reader.result;p.style.display="block";}; reader.readAsDataURL(file);
+ };
+ form.onsubmit=e=>{e.preventDefault(); if(document.getElementById("scheduleType").value==="interval" && !document.getElementById("intervalValue").value){toast("Enter an interval value.");return;} saveMedicineFromForm(form);};
+});
+</script>
+</head><body>
+<header class="topbar"><div class="btn-row"><button class="icon-btn mobile-menu">☰</button><a class="brand" href="../patient/dashboard.html">MedRemind<span>+</span></a></div><div class="top-actions"><span class="muted" data-user-name></span><button class="btn btn-small" onclick="logout()">Logout</button></div></header>
+<div class="layout"><aside class="sidebar">
+    <div class="nav-title">Patient</div>
+    <nav class="nav">
+      <a href="../patient/dashboard.html">Dashboard</a>
+      <a href="../patient/medicines.html">My Medicines</a>
+      <a href="../patient/history.html">Medication History</a>
+      <a href="../patient/adherence.html">Adherence</a>
+      <a href="../patient/notifications.html">Notifications</a>
+      <a href="../patient/profile.html">Profile & Settings</a>
+    </nav></aside><main class="main">
+<div class="page-head"><div><h1 id="formTitle">Add Medicine</h1><div class="muted">Enter the schedule you want the prototype to track.</div></div></div>
+<div class="card"><form id="medicineForm" data-image="">
+<input type="hidden" name="id" id="id">
+<div class="form-grid">
+<div class="field"><label>Medicine name *</label><input name="name" id="name" required></div>
+<div class="field"><label>Dosage *</label><input name="dosage" id="dosage" placeholder="e.g. 500 mg" required></div>
+<div class="field full"><label>Medicine image</label><input type="file" id="imageFile" accept="image/*"><img id="preview" class="photo-preview" alt="Medicine preview"><div class="help">Optional image used on medicine cards and the reminder.</div></div>
+<div class="field full"><label>Instructions</label><textarea name="instructions" id="instructions" rows="3" placeholder="e.g. After breakfast"></textarea></div>
+<div class="field"><label>Schedule type</label><select name="scheduleType" id="scheduleType"><option value="fixed">Fixed time</option><option value="interval">Interval based</option></select></div>
+<div class="field"><label>Time / starting time *</label><input type="time" name="time" id="time" required></div>
+<div class="field interval-only"><label>Interval value</label><input type="number" name="intervalValue" id="intervalValue" min="1" placeholder="e.g. 24"></div>
+<div class="field interval-only"><label>Interval unit</label><select name="intervalUnit" id="intervalUnit"><option value="hours">Hours</option><option value="days">Days</option></select></div>
+<div class="field"><label>Start date</label><input type="date" name="startDate" id="startDate"></div>
+<div class="field"><label>End date</label><input type="date" name="endDate" id="endDate"></div>
+</div>
+<div class="notice" style="margin-top:16px">For interval schedules, the prototype can calculate a next reminder from a confirmed dose time. It does not make medical decisions or change a prescribed treatment.</div>
+<div class="btn-row" style="margin-top:16px"><button class="btn btn-primary">Save Medicine</button><a class="btn" href="medicines.html">Cancel</a></div>
+</form></div>
+</main></div>
+<script>document.addEventListener("DOMContentLoaded",()=>{const u=currentUser();document.querySelectorAll("[data-user-name]").forEach(e=>e.textContent=u?.name||"");});</script>
+</body></html>

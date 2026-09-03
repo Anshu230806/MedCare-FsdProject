@@ -25,6 +25,31 @@ button {
     cursor: pointer
 }
 
+
+.topbar {
+    height: 64px;
+    background: #fff;
+    border-bottom: 1px solid #dce6e3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 20
+}
+
+.brand {
+    font-size: 21px;
+    font-weight: 700;
+    color: #197a68
+}
+
+.brand span {
+    color: #243330
+}
+
+
 .photo-preview {
     width: 100px;
     height: 100px;

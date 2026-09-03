@@ -7,17 +7,17 @@
 
 | Roll No. | Name | GitHub username |
 |---|---|---|
-| <roll> | <name> | <username> |
+| 24ESKCS052 | Anshu | Anshu230806 |
 
 ## About
 
-<Two or three sentences on what this application does.>
+MedicalCare Project built for senior citizens to provide them facility of medicine taken remiders with image notification so that they can take care of their health 
 
 ## Tech stack
 
-- Frontend: <e.g. React>
-- Backend: <e.g. Node.js / Express>
-- Database: <e.g. PostgreSQL>
+- Frontend: HTML , CSS , JS
+- Backend: 
+- Database: 
 
 ## Running locally
 
@@ -28,7 +28,6 @@ make run
 
 ## Live URL
 
-<Add once M5 is done. Until then, leave as is.>
 
 ## Health endpoint
 

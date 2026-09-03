@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Reports — MedRemind+</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/storage.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/caregiver.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => { const u = caregiverInit(); if (!u) return; const p = patientForCaregiver(u.id); if (!p) return; const logs = getLogsForPatient(p.id).filter(l => l.status !== "pending"); const taken = logs.filter(l => l.status === "taken").length, missed = logs.filter(l => l.status === "missed").length, snoozed = logs.filter(l => l.status === "snoozed").length; report.innerHTML = `<div class="grid grid-4"><div class="card"><div class="muted">Patient</div><div class="stat" style="font-size:20px">${p.name}</div></div><div class="card"><div class="muted">Adherence</div><div class="stat">${adherenceFor(p.id)}%</div></div><div class="card"><div class="muted">Taken</div><div class="stat">${taken}</div></div><div class="card"><div class="muted">Missed</div><div class="stat">${missed}</div></div></div><div class="card" style="margin-top:16px"><h3>Status breakdown</h3><div class="progress-row"><span>Taken</span><strong>${taken}</strong></div><div class="progress"><div style="width:${logs.length ? Math.round(taken / logs.length * 100) : 0}%"></div></div><div class="progress-row"><span>Missed</span><strong>${missed}</strong></div><div class="progress"><div style="width:${logs.length ? Math.round(missed / logs.length * 100) : 0}%"></div></div><div class="progress-row"><span>Snoozed</span><strong>${snoozed}</strong></div><div class="progress"><div style="width:${logs.length ? Math.round(snoozed / logs.length * 100) : 0}%"></div></div></div>`; });
+    </script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="btn-row"><button class="icon-btn mobile-menu">☰</button><a class="brand"
+                href="../caregiver/dashboard.html">MedRemind<span>+</span></a></div>
+        <div class="top-actions"><span class="muted" data-user-name></span><button class="btn btn-small"
+                onclick="logout()">Logout</button></div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="nav-title">Caregiver</div>
+            <nav class="nav">
+                <a href="../caregiver/dashboard.html">Dashboard</a>
+                <a href="../caregiver/patients.html">Patients</a>
+                <a href="../caregiver/alerts.html">Alerts</a>
+                <a href="../caregiver/notifications.html">Notifications</a>
+                <a href="../caregiver/reports.html">Reports</a>
+                <a href="../caregiver/profile.html">Profile</a>
+            </nav>
+        </aside>
+        <main class="main">
+            <div class="page-head">
+                <div>
+                    <h1>Reports</h1>
+                    <div class="muted">Basic adherence summary for the connected patient.</div>
+                </div>
+            </div>
+            <div id="report"></div>
+        </main>
+    </div>
+    <script>document.addEventListener("DOMContentLoaded", () => { const u = currentUser(); document.querySelectorAll("[data-user-name]").forEach(e => e.textContent = u?.name || ""); });</script>
+</body>
+
+</html>

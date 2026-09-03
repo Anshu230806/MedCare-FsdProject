@@ -1,7 +1,5 @@
-# <Project Name>
+# MedCare-FsdProject
 
-> Replace every angle-bracket placeholder below. The hygiene check in CI will
-> fail until you do.
 
 ## Author
 

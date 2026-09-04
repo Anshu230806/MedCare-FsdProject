@@ -17,4 +17,16 @@ describe("Medicine scheduling logic", () => {
         expect(isMedicineScheduled(medicine)).toBe(true);
     });
 
+
+    test("does not schedule an inactive medicine", () => {
+        const medicine = {
+            id: "m2",
+            name: "Vitamin D",
+            active: false,
+            time: "14:00"
+        };
+
+        expect(isMedicineScheduled(medicine)).toBe(false);
+    });
+
 });

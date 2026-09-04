@@ -1,0 +1,29 @@
+{
+  "name": "medcare-fsdproject",
+  "version": "1.0.0",
+  "description": "| Roll No. | Name | GitHub username |\r |---|---|---|\r | 24ESKCS052 | Anshu | Anshu230806 |",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anshu230806/MedCare-FsdProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anshu230806/MedCare-FsdProject/issues"
+  },
+  "homepage": "https://github.com/Anshu230806/MedCare-FsdProject#readme",
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "vitest": "^5.0.0"
+  },
+  "type": "module"
+}

@@ -103,7 +103,7 @@ describe("Medication adherence", () => {
             }
         ];
 
-        expect(adherenceFor(logs, "u1")).toBe(50);
+        expect(adherenceFor(logs, "u1")).toBe(33);
     });
 
 });

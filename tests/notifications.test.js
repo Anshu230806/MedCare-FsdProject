@@ -21,4 +21,15 @@ describe("Notification logic", () => {
         expect(result.every(n => n.userId === "u1")).toBe(true);
     });
 
+
+    test("returns an empty array when the user has no notifications", () => {
+        const notifications = [
+            { id: "n1", userId: "u1", text: "Medicine taken" }
+        ];
+
+        const result = notificationsFor(notifications, "u3");
+
+        expect(result).toEqual([]);
+    });
+
 });

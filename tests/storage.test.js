@@ -79,4 +79,6 @@ describe("Medication adherence", () => {
 
         expect(adherenceFor(logs, "u1")).toBe(67);
     });
+
+
 });

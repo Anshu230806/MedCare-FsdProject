@@ -29,7 +29,7 @@ jobs:
   # ---------------------------------------------------------------------------
 
 
-    build-and-test:
+  build-and-test:
     name: Build and test
     runs-on: ubuntu-latest
 
@@ -55,7 +55,7 @@ jobs:
       - name: Build project
         run: make build
 
-        
+
   # ---------------------------------------------------------------------------
   # M4 — Containerization. Uncomment and complete when you get there.
   # The push to the registry is what proves your build actually ran, so it is

@@ -22,4 +22,14 @@ describe("Patient medicine logic", () => {
         expect(result[0].id).toBe("m1");
     });
 
+
+    test("returns an empty array when the patient has no medicines", () => {
+        const medicines = [
+            { id: "m1", patientId: "u1", active: true }
+        ];
+
+        const result = getMedicinesForPatient(medicines, "u3");
+
+        expect(result).toEqual([]);
+    });
 });

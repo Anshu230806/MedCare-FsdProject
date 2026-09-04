@@ -81,4 +81,29 @@ describe("Medication adherence", () => {
     });
 
 
+    test("rounds adherence percentage correctly", () => {
+        const logs = [
+            {
+                id: "l10",
+                patientId: "u1",
+                date: "2026-09-04",
+                status: "taken"
+            },
+            {
+                id: "l11",
+                patientId: "u1",
+                date: "2026-09-04",
+                status: "missed"
+            },
+            {
+                id: "l12",
+                patientId: "u1",
+                date: "2026-09-04",
+                status: "missed"
+            }
+        ];
+
+        expect(adherenceFor(logs, "u1")).toBe(50);
+    });
+
 });

@@ -28,22 +28,34 @@ jobs:
   # continue-on-error or "|| true" to make it green.
   # ---------------------------------------------------------------------------
 
-  # build-and-test:
-  #   name: Build and test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #
-  #     # Set up whichever runtime you need, for example:
-  #     # - uses: actions/setup-node@v4
-  #     #   with: { node-version: '20', cache: 'npm' }
-  #     # - uses: actions/setup-python@v5
-  #     #   with: { python-version: '3.12' }
-  #
-  #     - run: make install
-  #     - run: make test
-  #     - run: make build
 
+    build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository code into the GitHub Actions runner.
+      - uses: actions/checkout@v4
+
+      # Install Node.js because the project uses Vitest for automated testing.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Install the exact dependencies listed in package-lock.json.
+      - name: Install dependencies
+        run: make install
+
+      # Run the six automated tests through the Makefile.
+      - name: Run tests
+        run: make test
+
+      # Run the project's build/validation step.
+      - name: Build project
+        run: make build
+
+        
   # ---------------------------------------------------------------------------
   # M4 — Containerization. Uncomment and complete when you get there.
   # The push to the registry is what proves your build actually ran, so it is
